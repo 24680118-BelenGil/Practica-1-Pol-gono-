@@ -65,7 +65,12 @@ bpy.ops.object.delete()
 
 crear_poligono_2d("Poligono2D", lados=6, radio=5)
 ```
-* **Carga:**
-* **Limpieza:**
-*  **Ejecución:**
-## Conclusión
+* **malla. :** Se cargan los datos calculados en vertices y aristas en la malla, [] se usa para señalar que en "z" no hay valores, ya que es una figura 2D. Tambien calcula como se vera la figura. 
+* **Limpieza:** Se usa "select" para seleccionar todo objeto creado anteriormente y con "delete" los elimina. 
+*  **Ejecución:** Llamamos la funcion anteriormente creada y definimos el nombre del poligono, el número de lados y el radio de la figura.
+## Resultado
+Finalmente, segun lo definido en el código, obtenemos un hexagono de radio 5 a 3 unidades de distancia en el eje Z.
+[Da click aquí para ver el código]()
+<img width="903" height="550" alt="Captura de pantalla 2026-02-08 162823" src="https://github.com/user-attachments/assets/27497032-cc0f-460b-b1e2-99fca3429dc0" />
+
+
