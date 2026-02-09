@@ -71,6 +71,7 @@ crear_poligono_2d("Poligono2D", lados=6, radio=5)
 ## Resultado
 Finalmente, segun lo definido en el código, obtenemos un hexagono de radio 5 y 3 unidades de distancia en el eje Z.
 [Da click aquí para ver el código](./poligono_blender.py)
+
 <img width="903" height="550" alt="Captura de pantalla 2026-02-08 162823" src="https://github.com/user-attachments/assets/27497032-cc0f-460b-b1e2-99fca3429dc0" />
 
 
