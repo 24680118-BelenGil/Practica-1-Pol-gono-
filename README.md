@@ -1,77 +1,74 @@
-# Practica-1-Pol-gono-2D
-## Planteamiento 
-Crear un polígono 2D en Blender usando Scripting, donde se pueda editar el numero de lados y el radio de el polígono.
-## Desarrollo
-Abrimos Blender, habilitamos el área de Scripting y comenzamos a escribir en el área de texto.
+# Preactica 2. Flor de vida 🏵️
+## Planteamiento
+Contruye una Flor de vida con un circulo base de radio 3 y centro en las coordenadas (0,0,0) y *n* canctidad de circulo perifericos, estos deben crearse usan el ciclo "while", que deben estar ubicados exactamente sobre el perímetro del circulo base.
 
-1.Importamos las siguinetes librerias.
+## Desarrollo
+Abrimos el area de **Scripting**, creamos un nuevo Text y lo guardamos.
+
+**1.Librerias**
+
+Importamos las siguientes librerias:
 ```python 
 import bpy
 import math
 ```
-* **import bpy:** Es la mas importante, ya que de esta libreria depende que Blender entienda el código de python.
-* **import math:** Libreria de python que permite usar las funciones de seno, coseno y pi.
+* **import bpy:** Es la libreria mas importante, con ella Blender entiende el codigo en python.
+* **import math:** La necesitaremos para usar las funciones trigonometricas *(seno/coseno)* y convertir las coordenada polares a coordenadas cartianas, así obtendremos una flor en 2D.
+  
+**2.Preparación de escena**
 
-2.Creamos la siguinete función.
+Antes de crear la flor, necesitamos preparar el escenario seleccionando y elimanado todo objeto que este presente en el, para ello creamos los siguientes métodos:
 ```python 
-def crear_poligono_2d(nombre, lados,  radio):
-```
-Definira el nombre, No.lados y el radio de el polígono.
-
-3.Creación de objetos.
-```python 
-malla = bpy.data.meshes.new(nombre)
-objeto = bpy.data.objects.new(nombre, malla)
-bpy.context.collection.objects.link(objeto)
-```
-* **malla:** Usamos el comando "meshes" para crear la estrcutura básica de la figura.
-* **objeto:** Usamos "objects" para crear el contenedor de la malla y ligaos la malla a este.
-Finalmente vinculamos el objeto alplano de Blender
-
-4.Listas.
-```python 
-vertices = []
-aristas = []
-```
-Creamos dos listas, "vertices" guardara las coordenas (x, y, z) para crear una linea y "aristas" se encargara de unir las lineas.
-
-5.Primer ciclo for.
-```python 
-for i in range(lados):
-        angulo = 2 * math.pi * i / lados
-        x = radio * math.cos(angulo)
-        y = radio * math.sin(angulo)
-        vertices.append((x, y, 3))
-```
-Calculamos las vertices pasnado las coordenadas polares a cartesianas, este bucle se repite segun los lados del polígono.
-* **angulo:** define donde poner cada punto.
-* **x/y :** convierte el ángulo polar a plano cartesiano.
-Finalmente se guarda el punto calculado.
-
-6.Segundo ciclo for.
-```python 
-for i in range(lados):
-        aristas.append((i, (i +1) % lados))
-```
-Definimos las uniones de cada vertice guardado.
-
-7.Carga, Limpieza y Ejecución.
-```python 
-    malla.from_pydata(vertices, aristas, [])
-    malla.update()
-    
-bpy.ops.object.select_all(action = 'SELECT')
+bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete()
-
-crear_poligono_2d("Poligono2D", lados=6, radio=5)
 ```
-* **malla. :** Se cargan los datos calculados en vertices y aristas en la malla, [] se usa para señalar que en "z" no hay valores, ya que es una figura 2D. Tambien calcula como se vera la figura. 
-* **Limpieza:** Se usa "select" para seleccionar todo objeto creado anteriormente y con "delete" los elimina. 
-*  **Ejecución:** Llamamos la funcion anteriormente creada y definimos el nombre del poligono, el número de lados y el radio de la figura.
+* El primer método selecciona todo objento que se encuentre en el plano y con el siguiente elimina lo seleccionado.
+  
+**3.Parámetros/Variables**
+
+Una vez preparada la escena, definimos las variable a utilizar.
+```python 
+radio = 3
+angulo_actual = 0
+paso_angular = 60 
+```
+* **radio:** Define la medida del radio de la circunferencia.
+* **angulo_actual:** Se inicializa en 0 y define donde inicia y termina un circulo, las cordenadas *X,Y* donde se va ha dibujar, además, de limitar el angulo donde se dibujaran los circulos.
+* **paso_angular:** Defiene cada cuantos angulos se de dibujar un circulo, siendo sl limite el *angulo_actual* 
+
+**4.Circulo base**
+
+Con las variables definidas creamos el circulo base, dfiniendo en el interior del método sus caracteristicas, la medida de su radio, su localización en el plano cartesiano y las vertices que nos permitiran visualizar el circulo en el plano.
+```python 
+bpy.ops.mesh.primitive_circle_add(radius=radio, location=(0, 0, 0), vertices=64)
+```
+
+**5.Ciclo "While"**
+
+Finalmente, uasmos el ciclo "While" para crear los circulos perifericos e iniciar el patron repetitivo que seguira siempre y cuando el **angulo_actual** se menor a **360°**, una vez cumplida la condicion el ciclo se dentendra.
+```python 
+while angulo_actual <360:
+
+    angulo_actual += paso_angular
+    
+    x3 = radio * math.cos(math.radians(angulo_actual))
+    y3 = radio * math.sin(math.radians(angulo_actual))
+    bpy.ops.mesh.primitive_circle_add(radius=radio, location=(x3, y3, 0), vertices=64)
+```
+* **angulo_actual += paso_angular:** Suma por cada ciclo el valos de *paso_angular* a *angulo_acual* para compararlo con 360.
+* **X/Y:** Convierte los angulos a radianes, de esta forma la computadora podra enterder los angulos, y dara la coordenadas *X/Y* exactas del circulo, para finalmemte  multiplcar por *radio* y obtener el centro de los circulos en el perimetro del circulo base.
+* **bpy.ops.mesh.primitive_circle_add(radius=radio, location=(x3, y3, 0), vertices=64):** Es el encargado de crear el circulo segun los parametros definidos. 
+
 ## Resultado
-Finalmente, segun lo definido en el código, obtenemos un hexagono de radio 5 y 3 unidades de distancia en el eje Z.
-[Da click aquí para ver el código](./poligono_blender.py)
+¡¡LISTO!! Ahora puedes crear tu flor de vida 🏵️, cambia las variables para visulizar diferente resultdos.😊
 
-<img width="903" height="550" alt="Captura de pantalla 2026-02-08 162823" src="https://github.com/user-attachments/assets/27497032-cc0f-460b-b1e2-99fca3429dc0" />
+[Da click aquí para ver el código](./Flor_de_vida.py) 
 
+<img width="1048" height="641" alt="Captura de pantalla 2026-02-14 112707" src="https://github.com/user-attachments/assets/3ee1223c-61e0-4242-bd51-8c9e4e74042a" />
+
+En esta imagen el valor de **paso_ angular** es de 60.
+
+<img width="1048" height="648" alt="Captura de pantalla 2026-02-14 112745" src="https://github.com/user-attachments/assets/3d51beb9-301b-485d-aea5-6a2334dc4de1" />
+
+Aquí es de 10.
 
